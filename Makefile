@@ -8,6 +8,9 @@ OBJS = \
 	entry.o \
 	start.o \
 	main.o \
+	mem.o \
+	printf.o \
+	strings.o \
 	uart.o
 
 CFLAGS = -Wall -Werror -O -fno-omit-frame-pointer -ggdb -gdwarf-2 

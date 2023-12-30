@@ -1,9 +1,7 @@
-#include "uart.h"
+#include "printf.h"
+#include "strings.h"
 
 void main() {
-	uartputc_sync(104);
-	uartputc_sync(101);
-	uartputc_sync(108);
-	uartputc_sync(108);
-	uartputc_sync(111);
+	struct string s = STRING("hello\n");
+	printf(&s);
 }

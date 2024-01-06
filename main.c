@@ -2,23 +2,11 @@
 #include "strings.h"
 
 void main() {
-	struct string s = STRING("hello\n");
-	printf(&s);
+	printf(STRING("hello\n"));
 
-	struct string n;
-
-	n = int_to_string(0);
-	println(&n);
-
-	n = int_to_string(1);
-	println(&n);
-
-	n = int_to_string(-1);
-	println(&n);
-
-	n = int_to_string(0x7FFFFFFFFFFFFFFF);
-	println(&n);
-
-	n = int_to_string(-0x7FFFFFFFFFFFFFFF);
-	println(&n);
+	printf(STRING("%d %d\n"), 0, 1);
+	printf(STRING("%d %d\n"), 1, -1);
+	printf(STRING("%d\n"), -1);
+	printf(STRING("%d\n"), 0x7FFFFFFFFFFFFFFF);
+	printf(STRING("%d\n"), -0x7FFFFFFFFFFFFFFF);
 }

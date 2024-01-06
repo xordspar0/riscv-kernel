@@ -4,7 +4,7 @@
 #include "printf.h"
 
 struct string string_init(const char *input, uint8_t length) {
-	struct string s = {.length = length - 1, .data = {} };
+	struct string s = {.length = length, .data = {} };
 	memmove(s.data, input, s.length);
 
 	return s;

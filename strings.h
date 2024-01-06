@@ -9,6 +9,6 @@ struct string {
 
 struct string string_init(const char *input, uint8_t strlen);
 
-#define STRING(s) string_init(s, sizeof(s))
+#define STRING(s) string_init(s, sizeof(s) - 1)
 
 struct string int_to_string(int64_t);

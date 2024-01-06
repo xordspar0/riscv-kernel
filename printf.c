@@ -36,6 +36,9 @@ int printf(struct string format, ...) {
           bytes_written += print(int_to_string(d));
           break;
         }
+        case '%':
+          uartputc_sync('%');
+          break;
       }
 
     } else {

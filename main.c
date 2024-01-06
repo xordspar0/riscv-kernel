@@ -12,4 +12,6 @@ void main() {
 
 	char c = '%';
 	println(string_init(&c, 1));
+
+	printf(STRING("%d%%"), 99);
 }

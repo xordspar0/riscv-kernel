@@ -12,3 +12,8 @@ int printf(struct string *format, ...) {
 
   return i;
 }
+
+void println(struct string *s) {
+  printf(s);
+  uartputc_sync('\n');
+}

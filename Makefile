@@ -11,9 +11,11 @@ OBJS = \
 	mem.o \
 	printf.o \
 	strings.o \
+	swtch.o \
+	trampoline.o \
 	uart.o
 
-CFLAGS = -std=c2x -Wall -Werror -O -fno-omit-frame-pointer -ggdb -gdwarf-2
+CFLAGS = -std=gnu2x -Wall -Werror -O -fno-omit-frame-pointer -ggdb -gdwarf-2
 CFLAGS += -MD 
 CFLAGS += -mcmodel=medany 
 CFLAGS += -ffreestanding -fno-common -nostdlib -mno-relax 

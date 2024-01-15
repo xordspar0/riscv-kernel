@@ -6,6 +6,7 @@ LD = $(TOOLPREFIX)ld
 
 OBJS = \
 	entry.o \
+	kalloc.o \
 	start.o \
 	main.o \
 	mem.o \

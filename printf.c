@@ -60,7 +60,7 @@ int print_hex_data(void * start, int length) {
 		char value = ((char *)start)[i];
 		char c0 = chars[(value >> 4) & 0xF];
 		char c1 = chars[value & 0xF];
-		char c2 = white[(i & 7) == 0];
+		char c2 = white[(i & 7) == 7];
 
 		uartputc_sync(c0);
 		uartputc_sync(c1);

@@ -50,3 +50,22 @@ int printf(struct string format, ...) {
   va_end(args);
   return bytes_written;
 }
+
+int print_hex_data(void * start, int length) {
+	char chars[] = "0123456789ABCDEF";
+	char white[] = " \n";
+	int i = 0;
+
+	for (; i < length; i++) {
+		char value = ((char *)start)[i];
+		char c0 = chars[(value >> 4) & 0xF];
+		char c1 = chars[value & 0xF];
+		char c2 = white[(i & 7) == 0];
+
+		uartputc_sync(c0);
+		uartputc_sync(c1);
+		uartputc_sync(c2);
+	}
+
+	return i;
+}

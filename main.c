@@ -116,6 +116,8 @@ void main() {
 
 	printf(STRING("%d%%\n"), 99);
 
+	print_hex_data(usercode, sizeof(usercode));
+
 	// Start userspace code.
 	w_stvec(uservec);
 

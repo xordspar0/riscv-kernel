@@ -1,7 +1,7 @@
-TOOLPREFIX=/opt/riscv/bin/riscv64-unknown-elf-
+TOOLPREFIX=riscv-none-elf-
 
 CC = $(TOOLPREFIX)gcc
-AS = $(TOOLPREFIX)gas
+AS = $(TOOLPREFIX)as
 LD = $(TOOLPREFIX)ld
 
 OBJS = \
@@ -16,14 +16,17 @@ OBJS = \
 	trampoline.o \
 	uart.o
 
-CFLAGS = -std=gnu2x -Wall -Werror -O -fno-omit-frame-pointer -ggdb -gdwarf-2
+ASFLAGS = -march=rv64gc -mabi=lp64d
+
+CFLAGS = -std=gnu2x -march=rv64gc -mabi=lp64d
+CFLAGS += -Wall -Werror -Og -fno-omit-frame-pointer -ggdb -gdwarf-2
 CFLAGS += -MD 
 CFLAGS += -mcmodel=medany 
 CFLAGS += -ffreestanding -fno-common -nostdlib -mno-relax 
 CFLAGS += -I.
 CFLAGS += $(shell $(CC) -fno-stack-protector -E -x c /dev/null >/dev/null 2>&1 && echo -fno-stack-protector) 
 
-LDFLAGS = -z max-page-size=4096
+LDFLAGS = -b elf64-littleriscv -z max-page-size=4096
 
 kernel: kernel.ld $(OBJS)
 	$(LD) $(LDFLAGS) -T kernel.ld -o kernel $(OBJS)

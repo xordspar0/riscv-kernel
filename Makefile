@@ -37,5 +37,8 @@ QEMUOPTS += -global virtio-mmio.force-legacy=false
 qemu: kernel
 	qemu-system-riscv64 $(QEMUOPTS)
 
+gdb: kernel
+	qemu-system-riscv64 $(QEMUOPTS) -S -gdb tcp::26000
+
 clean:
 	rm -f *.o *.d

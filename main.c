@@ -25,6 +25,7 @@ struct context {
 
 void swtch(struct context*, struct context*);
 void userret();
+void uservec();
 
 struct trapframe {
 	/*   0 */ uint64_t kernel_satp;   // kernel page table
@@ -66,13 +67,9 @@ struct trapframe {
 };
 
 uint8_t usercode[] = {
-	0x17, 0x05, 0x00, 0x00, 0x13, 0x05, 0x45, 0x02,
-	0x97, 0x05, 0x00, 0x00, 0x93, 0x85, 0x35, 0x02,
-	0x93, 0x08, 0x70, 0x00, 0x73, 0x00, 0x00, 0x00,
-	0x93, 0x08, 0x20, 0x00, 0x73, 0x00, 0x00, 0x00,
-	0xef, 0xf0, 0x9f, 0xff, 0x2f, 0x69, 0x6e, 0x69,
-	0x74, 0x00, 0x00, 0x24, 0x00, 0x00, 0x00, 0x00,
-  0x00, 0x00, 0x00, 0x00
+	0x93, 0x08, 0x70, 0x00, // li a7, 7
+	0x73, 0x00, 0x00, 0x00, // ecall
+	0xef, 0xf0, 0x9f, 0xff  // jal start
 };
 
 void syscall_hello() {
@@ -84,6 +81,7 @@ struct context ucontext;
 struct trapframe utrapframe;
 
 void syscall_handler() {
+	println(STRING("Handling syscall\n"));
 	switch (utrapframe.a7) {
 		case 7:
 		syscall_hello();
@@ -91,15 +89,13 @@ void syscall_handler() {
 	}
 }
 
-extern uint64_t uservec;
-
 void usertrapret() {
 	unsigned long x = r_sstatus();
 	x &= ~SSTATUS_SPP; // clear SPP to 0 for user mode
 	x |= SSTATUS_SPIE; // enable interrupts in user mode
-	w_sstatus(x);
+	// w_sstatus(x); Test out usercode in supervisor mode for now.
 
-	userret();
+	asm volatile("sret"); // skip user trap handling code for now.
 }
 
 void main() {
@@ -116,16 +112,20 @@ void main() {
 
 	printf(STRING("%d%%\n"), 99);
 
+	printf(STRING("usercode addr: %d\n"), usercode);
 	print_hex_data(usercode, sizeof(usercode));
 
 	// Start userspace code.
-	w_stvec(uservec);
+	w_stvec((uint64_t)syscall_handler);
 
 	memset(&ucontext, 0, sizeof(ucontext));
 	ucontext.ra = (uint64_t)usertrapret;
 
 	memmove((void *)(uint64_t)0x80001000, &usercode, sizeof(usercode));
 	utrapframe.kernel_trap = (uint64_t)&syscall_handler;
+
+	w_sepc((uint64_t)usercode);
+	usertrapret(); // Skip context switching for now.
 
 	for (;;) {
 		swtch(&kcontext, &ucontext);
